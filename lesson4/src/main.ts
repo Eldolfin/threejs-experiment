@@ -21,6 +21,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x181818)
 
 const group = new THREE.Group();
+group.position.z = -5
 scene.add(group);
 
 const colors = ["blue", "white", "red"];
@@ -50,6 +51,27 @@ function createShapes() {
   })
 }
 createShapes()
+
+const loadingManager = new THREE.LoadingManager(
+  undefined,
+  (_url, loaded, total) => console.log(`Loading: ${loaded}/${total}`),
+  (url) => console.error(`failed to load texture: ${url}`)
+);
+const textureLoader = new THREE.TextureLoader(loadingManager);
+// const texture = textureLoader.load('/textures/door/color.jpg');
+// const texture = textureLoader.load('/textures/checkerboard-1024x1024.png');
+const texture = textureLoader.load('/textures/minecraft.png');
+texture.minFilter = THREE.NearestFilter
+texture.magFilter = THREE.NearestFilter
+texture.generateMipmaps = false
+const cube = new THREE.Mesh(
+  new THREE.BoxGeometry(),
+  new THREE.MeshBasicMaterial({
+    map: texture,
+  }),
+)
+cube.position.z = 3
+scene.add(cube)
 
 const sizes = {
   width: window.innerWidth,
