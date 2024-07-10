@@ -2,12 +2,13 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 import gsap from 'gsap';
+import { createShapes, meshes } from './createShapes';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <canvas class="webgl"></canvas>
 `
 
-const params = {
+export const params = {
   doubleClickToggleFullscreen: false,
   spin: () => {
     gsap.to(group.rotation, { y: group.rotation.y + 2 * Math.PI })
@@ -20,38 +21,11 @@ const canvas = document.querySelector('.webgl')!;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x181818)
 
-const group = new THREE.Group();
+export const group = new THREE.Group();
 group.position.z = -5
 scene.add(group);
 
-const colors = ["blue", "white", "red"];
-const meshes: THREE.MeshBasicMaterial[] = [];
-
-function createShapes() {
-  group.clear()
-  meshes.length = 0;
-  colors.forEach((color, i) => {
-    const count = params.shapeComplexity;
-    const positionsArray = new Float32Array(count * 3 * 3);
-    for (let i = 0; i < count * 3 * 3; i++) {
-      positionsArray[i] = (Math.random() - 0.5) * 2
-    }
-
-    const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
-    const geometry = new THREE.BufferGeometry()
-    geometry.setAttribute("position", positionsAttribute)
-    const material = new THREE.MeshBasicMaterial({ color, wireframe: params.wireframe });
-    meshes.push(material)
-    const cube = new THREE.Mesh(
-      geometry,
-      material,
-    )
-    cube.position.x = i * 2 - 2 * Math.floor(colors.length / 2);
-    group.add(cube)
-  })
-}
-createShapes()
-
+createShapes();
 const loadingManager = new THREE.LoadingManager(
   undefined,
   (_url, loaded, total) => console.log(`Loading: ${loaded}/${total}`),
@@ -72,6 +46,24 @@ const cube = new THREE.Mesh(
 )
 cube.position.z = 3
 scene.add(cube)
+
+const material = new THREE.MeshBasicMaterial();
+
+const sphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5),
+  material
+)
+sphere.position.x = -1.5
+const plane = new THREE.Mesh(
+  new THREE.PlaneGeometry(1, 1),
+  material
+)
+const torus = new THREE.Mesh(
+  new THREE.TorusGeometry(0.3, 0.2, 16, 32),
+  material
+)
+torus.position.x = 1.5
+scene.add(sphere, plane, torus)
 
 const sizes = {
   width: window.innerWidth,
@@ -111,14 +103,22 @@ window.addEventListener("dblclick", () => {
   }
 })
 
-// const clock = new THREE.Clock();
+const clock = new THREE.Clock();
 
 const update = () => {
   window.requestAnimationFrame(update)
-  // const elapsedTime = clock.getElapsedTime();
+  const elapsedTime = clock.getElapsedTime();
   // const wave = Math.sin(elapsedTime);
   // group.rotation.y = 0.5 * wave;
   // group.rotation.z = 2 * wave;
+
+  sphere.rotation.y = elapsedTime * 0.1
+  plane.rotation.y = elapsedTime * 0.1
+  torus.rotation.y = elapsedTime * 0.1
+
+  sphere.rotation.x = elapsedTime * 0.15
+  plane.rotation.x = elapsedTime * 0.15
+  torus.rotation.x = elapsedTime * 0.15
 
   // camera.lookAt(group.position)
   controls.update()
