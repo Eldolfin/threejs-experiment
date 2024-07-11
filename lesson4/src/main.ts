@@ -27,14 +27,13 @@ group.position.z = -5
 scene.add(group);
 
 createShapes(group, params);
+
 const loadingManager = new THREE.LoadingManager(
   undefined,
   (_url, loaded, total) => console.log(`Loading: ${loaded}/${total}`),
   (url) => console.error(`failed to load texture: ${url}`)
 );
 const textureLoader = new THREE.TextureLoader(loadingManager);
-// const texture = textureLoader.load('/textures/door/color.jpg');
-// const texture = textureLoader.load('/textures/checkerboard-1024x1024.png');
 const texture = textureLoader.load('/textures/minecraft.png');
 texture.minFilter = THREE.NearestFilter
 texture.magFilter = THREE.NearestFilter
@@ -48,15 +47,15 @@ const cube = new THREE.Mesh(
 cube.position.z = -2
 scene.add(cube)
 
-const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
-const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
-const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
-const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
-const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
-const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
-const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
-const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
-const gradientTexture = textureLoader.load('/textures/matcaps/3.png');
+// const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
+// const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+// const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
+// const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
+// const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
+// const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+// const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+// const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
+// const gradientTexture = textureLoader.load('/textures/matcaps/3.png');
 
 const material = new THREE.MeshBasicMaterial();
 
