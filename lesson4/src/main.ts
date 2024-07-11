@@ -47,33 +47,45 @@ const cube = new THREE.Mesh(
 cube.position.z = -2
 scene.add(cube)
 
-// const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
-// const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
-// const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
-// const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
-// const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
-// const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
-// const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
-// const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
-// const gradientTexture = textureLoader.load('/textures/matcaps/3.png');
+const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
+const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
+const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
+const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
+const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
+const gradientTexture = textureLoader.load('/textures/matcaps/3.png');
+const backgroundColor = textureLoader.load('/textures/background.jpg');
 
-const material = new THREE.MeshBasicMaterial();
+const doorMaterial = new THREE.MeshBasicMaterial({
+  map: doorColorTexture,
+  alphaMap: doorAlphaTexture,
+  aoMap: doorAmbientOcclusionTexture,
+});
 
 const sphere = new THREE.Mesh(
   new THREE.SphereGeometry(0.5),
-  material
+  doorMaterial
 )
 sphere.position.x = -1.5
 const plane = new THREE.Mesh(
   new THREE.PlaneGeometry(1, 1),
-  material
+  doorMaterial
 )
 const torus = new THREE.Mesh(
   new THREE.TorusGeometry(0.3, 0.2, 16, 32),
-  material
+  doorMaterial
 )
 torus.position.x = 1.5
 scene.add(sphere, plane, torus)
+
+const backgroundSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(500, 60, 40),
+  new THREE.MeshBasicMaterial({ map: backgroundColor, side: THREE.BackSide })
+)
+
+scene.add(backgroundSphere)
 
 const sizes = {
   width: window.innerWidth,
