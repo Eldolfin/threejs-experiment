@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import { group, params } from './main';
+import { Config } from './config';
 
 export const colors = ["blue", "white", "red"];
 export const meshes: THREE.MeshBasicMaterial[] = [];
 
-export function createShapes() {
+export function createShapes(group: THREE.Group, params: Config) {
   group.clear();
   meshes.length = 0;
   colors.forEach((color, i) => {

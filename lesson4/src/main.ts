@@ -2,13 +2,14 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 import gsap from 'gsap';
+import { Config } from './config';
 import { createShapes, meshes } from './createShapes';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <canvas class="webgl"></canvas>
 `
 
-export const params = {
+export const params: Config = {
   doubleClickToggleFullscreen: false,
   spin: () => {
     gsap.to(group.rotation, { y: group.rotation.y + 2 * Math.PI })
@@ -21,11 +22,11 @@ const canvas = document.querySelector('.webgl')!;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x181818)
 
-export const group = new THREE.Group();
+const group = new THREE.Group();
 group.position.z = -5
 scene.add(group);
 
-createShapes();
+createShapes(group, params);
 const loadingManager = new THREE.LoadingManager(
   undefined,
   (_url, loaded, total) => console.log(`Loading: ${loaded}/${total}`),
@@ -44,8 +45,18 @@ const cube = new THREE.Mesh(
     map: texture,
   }),
 )
-cube.position.z = 3
+cube.position.z = -2
 scene.add(cube)
+
+const doorColorTexture = textureLoader.load('/textures/door/color.jpg');
+const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg');
+const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg');
+const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
+const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
+const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
+const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
+const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
+const gradientTexture = textureLoader.load('/textures/matcaps/3.png');
 
 const material = new THREE.MeshBasicMaterial();
 
