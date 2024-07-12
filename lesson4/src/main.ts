@@ -58,7 +58,7 @@ const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
 const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
 
-const envMapPrefix = `/static/textures/environmentMaps/${getRandomInt(0, 3)}/`;
+const envMapPrefix = `/textures/environmentMaps/${getRandomInt(0, 3)}/`;
 const environmentMapTexture = cubeTextureLoader.load([
   envMapPrefix + 'px.jpg',
   envMapPrefix + 'nx.jpg',
