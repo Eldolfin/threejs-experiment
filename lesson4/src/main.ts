@@ -4,6 +4,7 @@ import GUI from 'lil-gui';
 import gsap from 'gsap';
 import { Config } from './config';
 import { createShapes, meshes } from './createShapes';
+import { getRandomInt } from './utils';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <canvas class="webgl"></canvas>
@@ -33,6 +34,8 @@ const loadingManager = new THREE.LoadingManager(
   (url) => console.error(`failed to load texture: ${url}`)
 );
 const textureLoader = new THREE.TextureLoader(loadingManager);
+const cubeTextureLoader = new THREE.CubeTextureLoader(loadingManager);
+
 const texture = textureLoader.load('/textures/minecraft.png');
 texture.minFilter = THREE.NearestFilter
 texture.magFilter = THREE.NearestFilter
@@ -56,6 +59,15 @@ const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
 const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
 const backgroundColor = textureLoader.load('/textures/background.jpg');
 
+const envMapPrefix = `/static/textures/environmentMaps/${getRandomInt(0, 3)}/`;
+const environmentMapTexture = cubeTextureLoader.load([
+  envMapPrefix + 'px.jpg',
+  envMapPrefix + 'nx.jpg',
+  envMapPrefix + 'py.jpg',
+  envMapPrefix + 'ny.jpg',
+  envMapPrefix + 'pz.jpg',
+  envMapPrefix + 'nz.jpg',
+])
 gradientTexture.minFilter = THREE.NearestFilter
 gradientTexture.magFilter = THREE.NearestFilter
 gradientTexture.generateMipmaps = false
@@ -71,9 +83,15 @@ const doorMaterial = new THREE.MeshStandardMaterial({
   displacementScale: 0.05,
   roughnessMap: doorRoughnessTexture,
   metalnessMap: doorMetalnessTexture,
+  envMap: environmentMapTexture,
 });
 doorMaterial.normalMap = doorNormalTexture
 
+const metalMaterial = new THREE.MeshStandardMaterial({
+  envMap: environmentMapTexture,
+  metalness: 1,
+  roughness: 0,
+});
 const sphere = new THREE.Mesh(
   new THREE.SphereGeometry(0.5, 64, 64),
   doorMaterial
@@ -90,6 +108,13 @@ const torus = new THREE.Mesh(
 torus.position.x = 1.5
 scene.add(sphere, plane, torus)
 
+const metalSphere = new THREE.Mesh(
+  new THREE.SphereGeometry(0.5),
+  metalMaterial,
+);
+metalSphere.position.set(0, 2, -2)
+scene.add(metalSphere)
+
 // useless ?
 // plane.geometry.setAttribute("uv2", new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2));
 // sphere.geometry.setAttribute("uv2", new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2));
@@ -102,12 +127,7 @@ const pointLight = new THREE.PointLight(0xffffff, 50);
 pointLight.position.set(2, 3, 4);
 scene.add(pointLight)
 
-const backgroundSphere = new THREE.Mesh(
-  new THREE.SphereGeometry(500, 60, 40),
-  new THREE.MeshBasicMaterial({ map: backgroundColor, side: THREE.BackSide })
-)
-
-scene.add(backgroundSphere)
+scene.background = environmentMapTexture
 
 const sizes = {
   width: window.innerWidth,
@@ -206,12 +226,15 @@ meshes.forEach((m, i) =>
     .name(`Cube ${i} color`)
 )
 
-const doorGUI = gui.addFolder("doors")
+const doorGUI = gui.addFolder("door shapes")
 
-// doorGUI.add(doorMaterial, "metalness", 0, 1)
-// doorGUI.add(doorMaterial, "roughness", 0, 1)
 doorGUI.add(doorMaterial, 'aoMapIntensity', 0, 10)
 doorGUI.add(doorMaterial, 'displacementScale', 0, 1)
 doorGUI.add(doorMaterial.normalScale, 'x', 0, 5)
   .name("normal scale")
   .onChange((v: number) => doorMaterial.normalScale.set(v, v))
+
+const metalGUI = gui.addFolder("Metal sphere")
+
+metalGUI.add(metalMaterial, "metalness", 0, 1)
+metalGUI.add(metalMaterial, "roughness", 0, 1)
