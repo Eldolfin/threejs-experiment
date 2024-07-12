@@ -58,14 +58,16 @@ const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
 const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
 
-const envMapPrefix = `/textures/environmentMaps/${getRandomInt(0, 3)}/`;
+const backgroundID = getRandomInt(0, 4);
+const envMapPrefix = `/textures/environmentMaps/${backgroundID}/`;
+const suffix = backgroundID == 4 ? 'png' : 'jpg';
 const environmentMapTexture = cubeTextureLoader.load([
-  envMapPrefix + 'px.jpg',
-  envMapPrefix + 'nx.jpg',
-  envMapPrefix + 'py.jpg',
-  envMapPrefix + 'ny.jpg',
-  envMapPrefix + 'pz.jpg',
-  envMapPrefix + 'nz.jpg',
+  envMapPrefix + 'px.' + suffix,
+  envMapPrefix + 'nx.' + suffix,
+  envMapPrefix + 'py.' + suffix,
+  envMapPrefix + 'ny.' + suffix,
+  envMapPrefix + 'pz.' + suffix,
+  envMapPrefix + 'nz.' + suffix,
 ])
 gradientTexture.minFilter = THREE.NearestFilter
 gradientTexture.magFilter = THREE.NearestFilter
