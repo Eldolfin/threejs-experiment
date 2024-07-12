@@ -20,7 +20,6 @@ export const params: Config = {
 const canvas = document.querySelector('.webgl')!;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x181818)
 
 const group = new THREE.Group();
 group.position.z = -5
@@ -54,31 +53,54 @@ const doorHeightTexture = textureLoader.load('/textures/door/height.jpg');
 const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg');
 const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg');
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg');
-const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
-const gradientTexture = textureLoader.load('/textures/matcaps/3.png');
+const gradientTexture = textureLoader.load('/textures/gradients/5.jpg');
 const backgroundColor = textureLoader.load('/textures/background.jpg');
 
-const doorMaterial = new THREE.MeshBasicMaterial({
+gradientTexture.minFilter = THREE.NearestFilter
+gradientTexture.magFilter = THREE.NearestFilter
+gradientTexture.generateMipmaps = false
+
+const doorMaterial = new THREE.MeshStandardMaterial({
   map: doorColorTexture,
   alphaMap: doorAlphaTexture,
   aoMap: doorAmbientOcclusionTexture,
+  transparent: true,
+  normalMap: doorNormalTexture,
+  side: THREE.DoubleSide,
+  displacementMap: doorHeightTexture,
+  displacementScale: 0.05,
+  roughnessMap: doorRoughnessTexture,
+  metalnessMap: doorMetalnessTexture,
 });
+doorMaterial.normalMap = doorNormalTexture
 
 const sphere = new THREE.Mesh(
-  new THREE.SphereGeometry(0.5),
+  new THREE.SphereGeometry(0.5, 64, 64),
   doorMaterial
 )
 sphere.position.x = -1.5
 const plane = new THREE.Mesh(
-  new THREE.PlaneGeometry(1, 1),
+  new THREE.PlaneGeometry(1, 1, 64, 64),
   doorMaterial
 )
 const torus = new THREE.Mesh(
-  new THREE.TorusGeometry(0.3, 0.2, 16, 32),
+  new THREE.TorusGeometry(0.3, 0.2, 64, 128),
   doorMaterial
 )
 torus.position.x = 1.5
 scene.add(sphere, plane, torus)
+
+// useless ?
+// plane.geometry.setAttribute("uv2", new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2));
+// sphere.geometry.setAttribute("uv2", new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2));
+// torus.geometry.setAttribute("uv2", new THREE.BufferAttribute(torus.geometry.attributes.uv.array, 2));
+
+const ambientLight = new THREE.AmbientLight("white", 0.5);
+scene.add(ambientLight)
+
+const pointLight = new THREE.PointLight(0xffffff, 50);
+pointLight.position.set(2, 3, 4);
+scene.add(pointLight)
 
 const backgroundSphere = new THREE.Mesh(
   new THREE.SphereGeometry(500, 60, 40),
@@ -164,25 +186,32 @@ gui
   .add(group, 'visible')
 
 gui.add(params, 'wireframe')
-  .onChange(createShapes)
+  .onChange(() => createShapes(group, params))
 
 gui.add(params, 'spin')
 gui.add(params, 'shapeComplexity')
   .min(3)
   .max(300)
   .step(1)
-  .onChange(createShapes)
+  .onChange(() => createShapes(group, params))
 
-
-gui.addColor(scene, 'background')
-  .name("background color")
 
 gui.add(camera, 'fov')
   .min(10)
   .max(180)
   .onChange(() => camera.updateProjectionMatrix())
-const colorsGUI = gui.addFolder('Colors')
+const colorsGUI = gui.addFolder('Colors').open(false)
 meshes.forEach((m, i) =>
   colorsGUI.addColor(m, 'color')
     .name(`Cube ${i} color`)
 )
+
+const doorGUI = gui.addFolder("doors")
+
+// doorGUI.add(doorMaterial, "metalness", 0, 1)
+// doorGUI.add(doorMaterial, "roughness", 0, 1)
+doorGUI.add(doorMaterial, 'aoMapIntensity', 0, 10)
+doorGUI.add(doorMaterial, 'displacementScale', 0, 1)
+doorGUI.add(doorMaterial.normalScale, 'x', 0, 5)
+  .name("normal scale")
+  .onChange((v: number) => doorMaterial.normalScale.set(v, v))
