@@ -6,6 +6,7 @@ import { Config } from './config';
 import { createShapes, meshes } from './createShapes';
 import { getRandomInt } from './utils';
 import typefaceFont from 'three/examples/fonts/helvetiker_regular.typeface.json';
+import { Font, TextGeometry } from 'three/examples/jsm/Addons.js';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <canvas class="webgl"></canvas>
@@ -94,7 +95,7 @@ const doorMaterial = new THREE.MeshStandardMaterial({
 doorMaterial.normalMap = doorNormalTexture;
 
 const metalMaterial = new THREE.MeshStandardMaterial({
-  envMap: environmentMapTexture,
+  envMap: scene.background,
   metalness: 1,
   roughness: 0,
 });
@@ -132,6 +133,25 @@ scene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 50);
 pointLight.position.set(2, 3, 4);
 scene.add(pointLight);
+
+const textGeometry = new TextGeometry('3D text OMG!!', {
+  font: new Font(typefaceFont),
+  size: 0.5,
+  height: 0.2,
+  curveSegments: 5,
+  bevelEnabled: true,
+  bevelThickness: 0.03,
+  bevelSize: 0.02,
+  bevelSegments: 4,
+});
+textGeometry.computeBoundingBox();
+textGeometry.center();
+const textMesh = new THREE.Mesh(textGeometry, metalMaterial);
+textMesh.position.set(0, 1, -2);
+
+scene.add(textMesh);
+
+scene.add(new THREE.AxesHelper());
 
 const sizes = {
   width: window.innerWidth,
