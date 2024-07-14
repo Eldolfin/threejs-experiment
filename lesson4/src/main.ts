@@ -139,6 +139,7 @@ const shapes = [
   new THREE.TorusGeometry(0.1, 0.05, 64, 128),
 ];
 const materials = [metalMaterial, doorMaterial];
+const miniShapes = new THREE.Group();
 for (let i = 0; i < 300; i++) {
   // const shape = new THREE.TorusGeometry(0.1, 0.05, 64, 128);
   const shape = shapes[i % shapes.length];
@@ -155,8 +156,9 @@ for (let i = 0; i < 300; i++) {
 
   const scale = Math.random() + 0.1;
   mesh.scale.set(scale, scale, scale);
-  scene.add(mesh);
+  miniShapes.add(mesh);
 }
+scene.add(miniShapes);
 // useless ?
 // plane.geometry.setAttribute("uv2", new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2));
 // sphere.geometry.setAttribute("uv2", new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2));
@@ -277,6 +279,10 @@ gui.add(camera, 'fov')
   .min(10)
   .max(180)
   .onChange(() => camera.updateProjectionMatrix());
+
+gui.add(miniShapes, 'visible')
+  .name('miniShapes');
+
 const colorsGUI = gui.addFolder('Colors').open(false);
 meshes.forEach((m, i) =>
   colorsGUI.addColor(m, 'color')
