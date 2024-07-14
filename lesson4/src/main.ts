@@ -120,8 +120,43 @@ const metalSphere = new THREE.Mesh(
   metalMaterial,
 );
 metalSphere.position.set(0, 2, -2);
-scene.add(metalSphere);
+const metalCube = new THREE.Mesh(
+  new THREE.BoxGeometry(),
+  metalMaterial,
+);
+metalCube.position.set(-2, 2, -2);
+const metalTorus = new THREE.Mesh(
+  new THREE.TorusGeometry(0.3, 0.2, 64, 128),
+  metalMaterial,
+);
+metalTorus.position.set(2, 2, -2);
+scene.add(metalSphere, metalCube, metalTorus);
 
+const miniDonutsRange = 7;
+const shapes = [
+  new THREE.SphereGeometry(0.1, 64, 64),
+  new THREE.BoxGeometry(0.1, 0.1, 0.1),
+  new THREE.TorusGeometry(0.1, 0.05, 64, 128),
+];
+const materials = [metalMaterial, doorMaterial];
+for (let i = 0; i < 300; i++) {
+  // const shape = new THREE.TorusGeometry(0.1, 0.05, 64, 128);
+  const shape = shapes[i % shapes.length];
+  const material = materials[i % materials.length];
+
+  const mesh = new THREE.Mesh(shape, material);
+  mesh.position.set(
+    (Math.random() - 0.5) * miniDonutsRange,
+    (Math.random() - 0.5) * miniDonutsRange,
+    (Math.random() - 0.5) * miniDonutsRange,
+  );
+  mesh.rotation.x = Math.random() * Math.PI;
+  mesh.rotation.y = Math.random() * Math.PI;
+
+  const scale = Math.random() + 0.1;
+  mesh.scale.set(scale, scale, scale);
+  scene.add(mesh);
+}
 // useless ?
 // plane.geometry.setAttribute("uv2", new THREE.BufferAttribute(plane.geometry.attributes.uv.array, 2));
 // sphere.geometry.setAttribute("uv2", new THREE.BufferAttribute(sphere.geometry.attributes.uv.array, 2));
