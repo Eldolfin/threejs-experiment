@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-thumbnails": "cd generate-previews && ./generate_thumnails.sh"
   },
   "devDependencies": {
     "@types/three": "^0.166.0",

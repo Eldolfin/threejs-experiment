@@ -1,0 +1,16 @@
+{
+  "name": "generate-previews",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "generate thumnails for subpages",
+  "main": "index.js",
+  "scripts": {
+    "generate-thumbnails": "node index.js"
+  },
+  "author": "Eldolfin",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^22.13.0",
+    "typescript": "^5.5.3"
+  }
+}

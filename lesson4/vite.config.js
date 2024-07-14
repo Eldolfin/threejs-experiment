@@ -4,6 +4,8 @@ export default defineConfig({
   publicDir: './static/',
   server: {
     host: true,
+    strictPort: true,
+    port: 3000,
   },
   build: {
     emptyOutDir: true,

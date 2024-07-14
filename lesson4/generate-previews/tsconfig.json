@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "module": "AMD",
+    "lib": ["es5", "es6", "dom"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "include": ["src"],
+    "outFile": "./dist/index.js"
+  }
+}
