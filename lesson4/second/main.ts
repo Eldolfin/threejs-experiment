@@ -57,21 +57,50 @@ hemisphereLight.visible = false;
 lightGroup.add(hemisphereLight);
 
 const pointLight = new THREE.PointLight(0xf5e056, 3, 10);
+pointLight.visible = false;
 lightGroup.add(pointLight);
+
+// const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, 3, 1, 1);
+// lightGroup.add(rectAreaLight);
+// rectAreaLight.position.set(-1.5, 0, 1.5);
+// rectAreaLight.lookAt(0, 0, 0);
+
+const spotLightGroup = new THREE.Group();
+lightGroup.add(spotLightGroup);
+const spotLight = new THREE.SpotLight(
+  'white',
+  0.5,
+  10,
+  Math.PI * 0.1,
+  0.25,
+  1,
+);
+spotLight.position.set(0, 2, 3);
+const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+spotLightHelper.visible = false;
+spotLightGroup.add(spotLight, spotLightHelper);
 
 /**
  * DEBUG
  */
 const transformControls = new TransformControls(camera, canvas);
-transformControls.mode = 'translate';
 transformControls.attach(lightGroup);
 transformControls.addEventListener('dragging-changed', (event) => {
   // Don't move the camera when moving the transform controls
   orbit.enabled = !event.value;
 });
+transformControls.visible = false;
+transformControls.enabled = false;
 scene.add(transformControls);
 
 const gui = new GUI();
+gui.close();
+gui.add(transformControls, 'visible')
+  .name('show helpers')
+  .onChange((value: boolean) => {
+    transformControls.enabled = value;
+    spotLightHelper.visible = value;
+  });
 
 {
   const ambientLightGUI = gui.addFolder('ambientLight');
@@ -92,4 +121,16 @@ const gui = new GUI();
   pointLightGUI.add(pointLight, 'distance', 0, 10);
   pointLightGUI.add(pointLight, 'decay', 1, 10);
   pointLightGUI.addColor(pointLight, 'color');
+}
+
+{
+  const spotLightGUI = gui.addFolder('spotLight');
+  spotLightGUI.add(spotLightGroup, 'visible').name('enabled');
+  spotLightGUI.add(spotLight, 'intensity', 0, 10);
+  spotLightGUI.add(spotLight, 'distance', 0, 10);
+  spotLightGUI.add(spotLight, 'decay', 1, 10);
+  spotLightGUI.add(spotLight, 'angle', 0, Math.PI / 2);
+  spotLightGUI.add(spotLight, 'penumbra', 0, 1);
+  spotLightGUI.add(spotLight, 'decay', 1, 10);
+  spotLightGUI.addColor(spotLight, 'color');
 }
