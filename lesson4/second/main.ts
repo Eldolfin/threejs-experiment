@@ -17,6 +17,7 @@ const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(),
   material,
 );
+floor.receiveShadow = true;
 
 floor.position.set(0, -1, 0);
 floor.rotation.x = -Math.PI / 2;
@@ -33,6 +34,8 @@ const cube = new THREE.Mesh(
 
 cube.position.set(1, 0, 0);
 sphere.position.set(-1, 0, 0);
+sphere.castShadow = true;
+cube.castShadow = true;
 scene.add(sphere, cube, floor);
 
 /*
@@ -58,6 +61,7 @@ lightGroup.add(hemisphereLight);
 
 const pointLight = new THREE.PointLight(0xf5e056, 3, 10);
 pointLight.visible = false;
+pointLight.castShadow = true;
 lightGroup.add(pointLight);
 
 // const rectAreaLight = new THREE.RectAreaLight(0x4e00ff, 3, 1, 1);
@@ -75,6 +79,7 @@ const spotLight = new THREE.SpotLight(
   0.25,
   1,
 );
+spotLight.castShadow = true;
 spotLight.position.set(0, 2, 3);
 const spotLightHelper = new THREE.SpotLightHelper(spotLight);
 spotLightHelper.visible = false;

@@ -28,6 +28,7 @@ export const setup3D = (
   const renderer = new THREE.WebGLRenderer({
     canvas,
   });
+  renderer.shadowMap.enabled = true;
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
