@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-const pages = ['first', 'second'];
+const pages = ['first', 'second', 'haunted-house'];
 
 (async () => {
   // 1. Launch the browser

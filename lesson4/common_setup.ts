@@ -1,8 +1,9 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Timer } from 'three/addons/misc/Timer.js';
 
 export const setup3D = (
-  { onUpdate }: { onUpdate?: () => void },
+  params: { onUpdate?: (elapsedTime: number) => void },
 ) => {
   document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <canvas class="webgl"></canvas>
@@ -20,6 +21,7 @@ export const setup3D = (
     camera.updateProjectionMatrix();
 
     renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   });
 
   const scene = new THREE.Scene();
@@ -28,6 +30,7 @@ export const setup3D = (
   const renderer = new THREE.WebGLRenderer({
     canvas,
   });
+
   renderer.shadowMap.enabled = true;
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -40,14 +43,17 @@ export const setup3D = (
   orbit.enableDamping = true;
   orbit.update();
 
+  const timer = new Timer();
   const update = () => {
+    timer.update();
+    const elapsedTime = timer.getElapsed();
     window.requestAnimationFrame(update);
+    orbit.update();
 
-    if (onUpdate) {
-      onUpdate();
+    if (params.onUpdate) {
+      params.onUpdate(elapsedTime);
     }
 
-    orbit.update();
     renderer.render(scene, camera);
   };
 

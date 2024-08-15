@@ -15,6 +15,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         first: resolve(__dirname, 'first/index.html'),
         second: resolve(__dirname, 'second/index.html'),
+        hauntedHouse: resolve(__dirname, 'haunted-house/index.html'),
       },
     },
   },

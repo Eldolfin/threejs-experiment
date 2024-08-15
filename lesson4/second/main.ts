@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { setup3D } from './common_setup';
+import { setup3D } from '../common_setup';
 import { TransformControls } from 'three/examples/jsm/Addons.js';
 import { GUI } from 'lil-gui';
 
