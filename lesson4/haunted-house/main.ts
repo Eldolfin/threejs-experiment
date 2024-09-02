@@ -9,7 +9,7 @@ let params = {
   onUpdate: (_: number) => {},
 };
 const { scene, camera } = setup3D(params);
-const textureLoader = new THREE.TextureLoader();
+// const textureLoader = new THREE.TextureLoader();
 const gui = new GUI();
 
 /**
@@ -19,7 +19,7 @@ const gui = new GUI();
 // Floor
 const floor = new THREE.Mesh(
   new THREE.PlaneGeometry(20, 20),
-  new THREE.MeshStandardMaterial(),
+  new THREE.MeshStandardMaterial({ color: 'lightgreen' }),
 );
 floor.rotation.x = -Math.PI / 2;
 scene.add(floor);
@@ -38,7 +38,7 @@ houseGroup.add(walls);
 const roofHeight = 1.5;
 const roof = new THREE.Mesh(
   new THREE.ConeGeometry(3.5, roofHeight, 4),
-  new THREE.MeshStandardMaterial(),
+  new THREE.MeshStandardMaterial({ color: 0xFFF21010 }),
 );
 roof.rotation.y = Math.PI / 4;
 roof.position.y += wallsHeight + roofHeight / 2;
@@ -54,7 +54,7 @@ door.position.z = 2 + 0.001;
 houseGroup.add(door);
 
 const bushGeometry = new THREE.SphereGeometry(1, 16, 16);
-const bushMaterial = new THREE.MeshStandardMaterial();
+const bushMaterial = new THREE.MeshStandardMaterial({ color: 'green' });
 
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial);
 bush1.position.set(0.8, 0.2, 2.2);
@@ -74,6 +74,38 @@ bush4.scale.setScalar(0.15);
 
 houseGroup.add(bush1, bush2, bush3, bush4);
 
+// Graves
+const graves = new THREE.Group();
+scene.add(graves);
+
+const graveGeometry = new THREE.BoxGeometry(0.6, 1, 0.2);
+const graveMaterial = new THREE.MeshStandardMaterial({ color: 0xb2b6b1 });
+const MIN_GRAVE_DIST = 3;
+const MAX_GRAVE_DIST = 9;
+const GRAVES_COUNT = 20;
+
+for (let i = 0; i < GRAVES_COUNT; i++) {
+  const angle = Math.random() * Math.PI * 2;
+  const distance = Math.random() * (MAX_GRAVE_DIST - MIN_GRAVE_DIST) +
+    MIN_GRAVE_DIST;
+  const x = Math.sin(angle) * distance;
+  const z = Math.cos(angle) * distance;
+
+  const grave = new THREE.Mesh(graveGeometry, graveMaterial);
+  grave.position.set(x, 0.3, z);
+  grave.rotateY(Math.random() * Math.PI * 2);
+  grave.rotateZ(Math.random() * 0.4);
+
+  graves.add(grave);
+}
+
+// Door light
+const doorLight = new THREE.PointLight(0xff7d46, 1, 7);
+doorLight.position.set(0, 2.2, 2.7);
+houseGroup.add(doorLight);
+
+// fog
+scene.fog = new THREE.Fog(0x262837, 1, 15);
 /**
  * Lights
  */
@@ -103,5 +135,5 @@ camera.position.z = 5;
  * Animate
  */
 
-params.onUpdate = (elapsedTime: number) => {
-};
+// params.onUpdate = (elapsedTime: number) => {
+// };
