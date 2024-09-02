@@ -61,14 +61,21 @@ houseGroup.add(roof);
 
 const doorHeight = 2;
 const door = new THREE.Mesh(
-  new THREE.PlaneGeometry(1, doorHeight),
+  new THREE.PlaneGeometry(1, doorHeight, 50, 50),
   new THREE.MeshStandardMaterial({
     map: textures.doorColor,
     alphaMap: textures.doorAlpha,
     aoMap: textures.doorAmbientOcculsion,
-    roughnessMap: textures.doorRoughness,
+    displacementMap: textures.doorHeight,
+    displacementScale: 0.1,
+    normalMap: textures.doorNormal,
     metalnessMap: textures.doorMetalness,
+    roughnessMap: textures.doorRoughness,
   }),
+);
+door.geometry.setAttribute(
+  'uv2',
+  new THREE.Float32BufferAttribute(door.geometry.attributes.uv.array, 2),
 );
 door.position.y = 1;
 door.position.z = 2 + 0.001;
