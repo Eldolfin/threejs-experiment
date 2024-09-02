@@ -3,7 +3,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Timer } from 'three/addons/misc/Timer.js';
 
 export const setup3D = (
-  params: { onUpdate?: (elapsedTime: number) => void },
+  params: {
+    onUpdate?: (elapsedTime: number) => void;
+    bgColor: THREE.ColorRepresentation;
+  },
 ) => {
   document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <canvas class="webgl"></canvas>
@@ -34,6 +37,7 @@ export const setup3D = (
   renderer.shadowMap.enabled = true;
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(params.bgColor);
 
   const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
   camera.position.set(0, 1, 5);

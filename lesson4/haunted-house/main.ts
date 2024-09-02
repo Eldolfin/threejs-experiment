@@ -5,12 +5,27 @@ import { GUI } from 'lil-gui';
 /*
  ** Scene Setup
  */
+const fogColor = 0x262837;
 let params = {
   onUpdate: (_: number) => {},
+  bgColor: fogColor,
 };
 const { scene, camera } = setup3D(params);
-// const textureLoader = new THREE.TextureLoader();
+const textureLoader = new THREE.TextureLoader();
 const gui = new GUI();
+
+// Textures
+const textures = {
+  doorColor: textureLoader.load('/textures/door/color.jpg'),
+  doorAlpha: textureLoader.load('/textures/door/alpha.jpg'),
+  doorAmbientOcculsion: textureLoader.load(
+    '/textures/door/ambientOcculsion.jpg',
+  ),
+  doorHeight: textureLoader.load('/textures/door/height.jpg'),
+  doorNormal: textureLoader.load('/textures/door/normal.jpg'),
+  doorMetalness: textureLoader.load('/textures/door/metalness.jpg'),
+  doorRoughness: textureLoader.load('/textures/door/roughness.jpg'),
+};
 
 /**
  * House
@@ -47,7 +62,13 @@ houseGroup.add(roof);
 const doorHeight = 2;
 const door = new THREE.Mesh(
   new THREE.PlaneGeometry(1, doorHeight),
-  new THREE.MeshStandardMaterial({ color: 'yellow' }),
+  new THREE.MeshStandardMaterial({
+    map: textures.doorColor,
+    alphaMap: textures.doorAlpha,
+    aoMap: textures.doorAmbientOcculsion,
+    roughnessMap: textures.doorRoughness,
+    metalnessMap: textures.doorMetalness,
+  }),
 );
 door.position.y = 1;
 door.position.z = 2 + 0.001;
@@ -105,7 +126,8 @@ doorLight.position.set(0, 2.2, 2.7);
 houseGroup.add(doorLight);
 
 // fog
-scene.fog = new THREE.Fog(0x262837, 1, 15);
+scene.fog = new THREE.Fog(fogColor, 1, 15);
+
 /**
  * Lights
  */
